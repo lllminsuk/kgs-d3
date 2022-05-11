@@ -1,17 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#91D4FA",
+    },
+  },
+});
+
+const client = new ApolloClient({
+  //uri: "https://kgs-project.ml/neo4j",
+  uri: "http://localhost:4000",
+  cache: new InMemoryCache({ addTypename: false }),
+});
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </ThemeProvider>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
