@@ -4,7 +4,7 @@ import { ReactComponent as ICLogo } from "./assets/imgs/logo.svg";
 import { useQuery } from "@apollo/client";
 import { SEARCH } from "./queries";
 import Search from "./component/Search";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function App() {
   const [words, setWords] = useState("");
