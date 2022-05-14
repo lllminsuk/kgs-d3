@@ -4,6 +4,7 @@ import { ReactComponent as ICLogo } from "./assets/imgs/logo.svg";
 import { useQuery } from "@apollo/client";
 import { SEARCH } from "./queries";
 import Search from "./component/Search";
+import Slider from "./component/Slider";
 import { useEffect, useState } from "react";
 
 function getRandomInt(min, max) {
@@ -39,9 +40,11 @@ function addRandomData(data, myConfig) {
 
 function App() {
   const [words, setWords] = useState("");
+  const [limit, setLimit] = useState(1000)
+  console.log(limit)
   const [renderData, setRenderData] = useState();
   const { loading, error, data } = useQuery(SEARCH, {
-    variables: { limit: 100, words: words, width: 850, height: 1500 },
+    variables: { limit: limit, words: words },
   });
   useEffect(() => {
     setRenderData(addRandomData(data, myConfig));
@@ -55,8 +58,8 @@ function App() {
     focusAnimationDuration: 0.75,
     focusZoom: 1,
     freezeAllDragEvents: false,
-    height: 850,
-    width: 1500,
+    height: 600,
+    width: 1200,
     highlightDegree: 1,
     highlightOpacity: 0.2,
     linkHighlightBehavior: true,
@@ -74,12 +77,12 @@ function App() {
       disableLinkForce: false,
     },
     node: {
-      color: "#d3d3d3",
+      color: "#ffffff",
       fontColor: "black",
-      fontSize: 12,
+      fontSize: 20,
       fontWeight: "normal",
-      highlightColor: "red",
-      highlightFontSize: 12,
+      highlightColor: "#ef8843",
+      highlightFontSize: 20,
       highlightFontWeight: "bold",
       highlightStrokeColor: "SAME",
       highlightStrokeWidth: 1.5,
@@ -87,27 +90,28 @@ function App() {
       mouseCursor: "pointer",
       opacity: 1,
       renderLabel: true,
-      size: 450,
+      size: 2000,
       strokeColor: "none",
       strokeWidth: 1.5,
       svg: "",
       symbolType: "circle",
+      labelPosition: "center"
     },
     link: {
-      color: "#d3d3d3",
-      fontColor: "red",
-      fontSize: 10,
-      fontWeight: "normal",
-      highlightColor: "blue",
+      color: "#91d4fa",
+      fontColor: "#2e6ec3",
+      fontSize: 16,
+      fontWeight: "bold",
+      highlightColor: "SAME",
       highlightFontSize: 8,
       highlightFontWeight: "bold",
       mouseCursor: "pointer",
       opacity: 1,
       renderLabel: true,
       semanticStrokeWidth: false,
-      strokeWidth: 4,
-      markerHeight: 6,
-      markerWidth: 6,
+      strokeWidth: 2,
+      markerHeight: 4,
+      markerWidth: 4,
       strokeDasharray: 0,
       strokeDashoffset: 0,
       strokeLinecap: "butt",
@@ -124,6 +128,7 @@ function App() {
   return (
     <Stack alignItems="center">
       <Search setWords={setWords} />
+      <Slider setLimit={setLimit}/>
       <Paper
         sx={{
           bgcolor: "#ffffff",
@@ -134,8 +139,8 @@ function App() {
           justifyContent="center"
           alignItems="center"
           sx={{
-            width: "1500px",
-            height: "850px",
+            width: "1200px",
+            height: "600px",
           }}
         >
           {!loading &&
