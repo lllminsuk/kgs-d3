@@ -6,6 +6,7 @@ export const SEARCH = gql`
       nodes {
         id
         url
+        type
       }
       links {
         source
