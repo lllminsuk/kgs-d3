@@ -14,7 +14,6 @@ function getRandomInt(min, max) {
 
 function addRandomData(data, myConfig) {
   if (!data) return undefined;
-  console.log(data);
   let convertedNodes = data.search.nodes.map((node) => {
     let newNode = { ...node };
     var check = false;
@@ -34,7 +33,7 @@ function addRandomData(data, myConfig) {
     return newNode;
   });
   let result = { search: { nodes: convertedNodes, links: data.search.links } };
-
+  console.log(result)
   return result;
 }
 
@@ -46,17 +45,7 @@ function App() {
   });
   useEffect(() => {
     setRenderData(addRandomData(data, myConfig));
-    console.log(renderData);
   }, [data]);
-
-  // graph payload (with minimalist structure)
-  /*const data = {
-    nodes: [{ id: "Harry" }, { id: "Sally" }, { id: "Alice", value: "temp" }],
-    links: [
-      { source: "Harry", target: "Sally", label: "섹스관계" },
-      { source: "Harry", target: "Alice" },
-    ],
-  };*/
 
   // the graph configuration, just override the ones you need
   const myConfig = {
@@ -151,8 +140,7 @@ function App() {
         >
           {!loading &&
           renderData &&
-          renderData.search.nodes.length !== 0 &&
-          renderData.search.links.length !== 0 ? (
+          renderData.search.nodes.length !== 0 ? (
             <Graph
               id="graph-id" // id is mandatory
               data={renderData.search}
