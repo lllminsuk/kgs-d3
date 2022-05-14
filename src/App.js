@@ -1,19 +1,53 @@
-import { Stack, AppBar } from "@mui/material";
+import { Stack, AppBar, Paper, CircularProgress } from "@mui/material";
 import { Graph } from "react-d3-graph";
 import { ReactComponent as ICLogo } from "./assets/imgs/logo.svg";
 import { useQuery } from "@apollo/client";
 import { SEARCH } from "./queries";
 import Search from "./component/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+}
+
+function addRandomData(data, myConfig) {
+  if (!data) return undefined;
+  console.log(data);
+  let convertedNodes = data.search.nodes.map((node) => {
+    let newNode = { ...node };
+    var check = false;
+    for (var i = 0; i < data.search.links.length; i++) {
+      if (
+        node.id === data.search.links[i].source ||
+        node.id === data.search.links[i].target
+      ) {
+        check = true;
+        break;
+      }
+    }
+    if (!check) {
+      newNode.fx = String(getRandomInt(40, myConfig.width - 40));
+      newNode.fy = String(getRandomInt(40, myConfig.height - 40));
+    }
+    return newNode;
+  });
+  let result = { search: { nodes: convertedNodes, links: data.search.links } };
+
+  return result;
+}
 
 function App() {
   const [words, setWords] = useState("");
+  const [renderData, setRenderData] = useState();
   const { loading, error, data } = useQuery(SEARCH, {
-    variables: { limit: 100, words: words },
+    variables: { limit: 100, words: words, width: 850, height: 1500 },
   });
-  console.log(loading);
-  console.log(!loading ? data.search : undefined);
-  console.log(error);
+  useEffect(() => {
+    setRenderData(addRandomData(data, myConfig));
+    console.log(renderData);
+  }, [data]);
 
   // graph payload (with minimalist structure)
   /*const data = {
@@ -32,7 +66,8 @@ function App() {
     focusAnimationDuration: 0.75,
     focusZoom: 1,
     freezeAllDragEvents: false,
-    height: 700,
+    height: 850,
+    width: 1500,
     highlightDegree: 1,
     highlightOpacity: 0.2,
     linkHighlightBehavior: true,
@@ -42,7 +77,6 @@ function App() {
     panAndZoom: false,
     staticGraph: false,
     staticGraphWithDragAndDrop: false,
-    width: 1000,
     d3: {
       alphaTarget: 0.05,
       gravity: -400,
@@ -99,23 +133,38 @@ function App() {
   };
 
   return (
-    <Stack>
-      <AppBar color="secondary">
-        <ICLogo width={40} height={40} />
-        <Search setWords={setWords} />
-      </AppBar>
-      {!loading &&
-      data &&
-      data.search.nodes.length !== 0 &&
-      data.search.links.length !== 0 ? (
-        <Graph
-          id="graph-id" // id is mandatory
-          data={data.search}
-          config={myConfig}
-          onClickNode={onClickNode}
-          onClickLink={onClickLink}
-        />
-      ) : undefined}
+    <Stack alignItems="center">
+      <Search setWords={setWords} />
+      <Paper
+        sx={{
+          bgcolor: "#ffffff",
+          borderRadius: 10,
+        }}
+      >
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          sx={{
+            width: "1500px",
+            height: "850px",
+          }}
+        >
+          {!loading &&
+          renderData &&
+          renderData.search.nodes.length !== 0 &&
+          renderData.search.links.length !== 0 ? (
+            <Graph
+              id="graph-id" // id is mandatory
+              data={renderData.search}
+              config={myConfig}
+              onClickNode={onClickNode}
+              onClickLink={onClickLink}
+            />
+          ) : (
+            <CircularProgress size={100} />
+          )}
+        </Stack>
+      </Paper>
     </Stack>
   );
 }
