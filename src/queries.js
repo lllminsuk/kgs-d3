@@ -5,8 +5,12 @@ export const SEARCH = gql`
     search(limit: $limit, words: $words) {
       nodes {
         id
-        url
         type
+        url
+        main
+        sub
+        title
+        uploadTime
       }
       links {
         source

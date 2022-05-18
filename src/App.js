@@ -100,7 +100,7 @@ function App() {
     link: {
       color: "#91d4fa",
       fontColor: "#2e6ec3",
-      fontSize: 16,
+      fontSize: 12,
       fontWeight: "bold",
       highlightColor: "SAME",
       highlightFontSize: 8,
