@@ -38,6 +38,24 @@ function addRandomData(data, myConfig) {
   return result;
 }
 
+function nodeColorChange(data, myConfig) {
+  if (!data) return undefined;
+  let convertedNodes = data.search.nodes.map((node) => {
+    let newNode = { ...node };
+    var nodeType = newNode.type.substr(0, 2)
+    if (nodeType==="PS") { newNode.color = "#f9aaa0" }
+    else if (nodeType==="LC") { newNode.color = "#f1935e" }
+    else if (nodeType==="OG") { newNode.color = "#f4f839" }
+    else if (nodeType==="DT") { newNode.color = "#39f87c" }
+    else if (nodeType==="TI") { newNode.color = "#39f2f8" }
+    else if (nodeType==="QT") { newNode.color = "#3996f8" }
+    return newNode;
+  });
+  let result = { search: { nodes: convertedNodes, links: data.search.links } };
+  console.log(result)
+  return result;
+}
+
 function App() {
   const [words, setWords] = useState("");
   const [limit, setLimit] = useState(1000)
@@ -48,11 +66,12 @@ function App() {
   });
   useEffect(() => {
     setRenderData(addRandomData(data, myConfig));
+    setRenderData(nodeColorChange(data, myConfig))
   }, [data]);
 
   // the graph configuration, just override the ones you need
   const myConfig = {
-    automaticRearrangeAfterDropNode: false,
+    automaticRearrangeAfterDropNode: true,
     collapsible: false,
     directed: true,
     focusAnimationDuration: 0.75,
@@ -63,23 +82,23 @@ function App() {
     highlightDegree: 1,
     highlightOpacity: 0.2,
     linkHighlightBehavior: true,
-    maxZoom: 8,
-    minZoom: 0.1,
+    maxZoom: 30,
+    minZoom: 0.5,
     nodeHighlightBehavior: true,
     panAndZoom: false,
     staticGraph: false,
     staticGraphWithDragAndDrop: false,
     d3: {
       alphaTarget: 0.05,
-      gravity: -400,
+      gravity: -100,
       linkLength: 300,
       linkStrength: 1,
       disableLinkForce: false,
     },
     node: {
-      color: "#ffffff",
+      color: "#46F6A4",
       fontColor: "black",
-      fontSize: 20,
+      fontSize: 12,
       fontWeight: "normal",
       highlightColor: "#ef8843",
       highlightFontSize: 20,
@@ -90,7 +109,7 @@ function App() {
       mouseCursor: "pointer",
       opacity: 1,
       renderLabel: true,
-      size: 2000,
+      size: 1200,
       strokeColor: "none",
       strokeWidth: 1.5,
       svg: "",
@@ -98,9 +117,10 @@ function App() {
       labelPosition: "center"
     },
     link: {
-      color: "#91d4fa",
+      type: "CURVE_SMOOTH",
+      color: "#9dc7cf",
       fontColor: "#2e6ec3",
-      fontSize: 12,
+      fontSize: 8,
       fontWeight: "bold",
       highlightColor: "SAME",
       highlightFontSize: 8,
@@ -118,11 +138,15 @@ function App() {
     },
   };
   const onClickNode = function (nodeId, node) {
-    window.alert(`Clicked node ${nodeId}`);
+    window.alert(`Clicked node ${node.type}`);
   };
 
   const onClickLink = function (source, target) {
     window.alert(`Clicked link between ${source} and ${target}`);
+  };
+
+  const onZoomChange = (prevZoom, newZoom) => {
+    this.setState({ currentZoom: newZoom });
   };
 
   return (
@@ -152,6 +176,7 @@ function App() {
               config={myConfig}
               onClickNode={onClickNode}
               onClickLink={onClickLink}
+              onZoomChange={onZoomChange}
             />
           ) : (
             <CircularProgress size={100} />

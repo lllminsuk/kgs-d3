@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import App from "./App";
 
 const theme = createTheme({
@@ -18,11 +18,20 @@ const client = new ApolloClient({
   cache: new InMemoryCache({ addTypename: false }),
 });
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </ThemeProvider>
+     <ApolloProvider client={client}>
+       <App />
+     </ApolloProvider>
+  </ThemeProvider>,
+  document.getElementById("root")
 );
+
+// const root = ReactDOM.createRoot(document.getElementById("root"));
+// root.render(
+//   <ThemeProvider theme={theme}>
+//     <ApolloProvider client={client}>
+//       <App />
+//     </ApolloProvider>
+//   </ThemeProvider>
+// );
