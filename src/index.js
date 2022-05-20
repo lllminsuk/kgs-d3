@@ -13,8 +13,8 @@ const theme = createTheme({
 });
 
 const client = new ApolloClient({
-  //uri: "https://kgs-project.ml/neo4j",
-  uri: "http://localhost:4000",
+  uri: "https://kgs-project.ml/neo4j",
+  //uri: "http://localhost:4000",
   cache: new InMemoryCache({ addTypename: false }),
 });
 
